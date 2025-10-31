@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263047914665",
+    "project_id": "note-app-turbo",
+    "storage_bucket": "note-app-turbo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263047914665:android:1d05d79b38f0e369faf5b8",
+        "android_client_info": {
+          "package_name": "com.example.note_app_turbo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy4cmY-ajWi52UmyWQcpFWfFqiiZYW9oE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
