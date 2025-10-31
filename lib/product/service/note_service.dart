@@ -9,8 +9,10 @@ class NoteService {
   final ApiClient _apiClient;
 
   Future<List<Note>> fetchNotes() async {
-    final Response<List<dynamic>> res = await _apiClient.client.get<List<dynamic>>('/notes');
-    final items = res.data ?? [];
+    final Response<Map<String, dynamic>> res = await _apiClient.client.get<Map<String, dynamic>>(
+      '/notes',
+    );
+    final items = (res.data?['items'] as List<dynamic>?) ?? [];
     return items.map((e) => Note.fromJson(e as Map<String, dynamic>)).toList();
   }
 
