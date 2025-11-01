@@ -7,6 +7,8 @@ class NotesState extends Equatable {
     this.filtered,
     this.errorMessage,
     this.lastDeleted,
+    this.showPinnedOnly = false,
+    this.sortBy = NotesSortOption.dateModified,
   });
 
   const NotesState.initial() : this(isLoading: false, notes: const []);
@@ -16,6 +18,8 @@ class NotesState extends Equatable {
   final List<Note>? filtered;
   final String? errorMessage;
   final Note? lastDeleted;
+  final bool showPinnedOnly;
+  final NotesSortOption sortBy;
 
   List<Note> get visible => filtered ?? notes;
 
@@ -25,6 +29,8 @@ class NotesState extends Equatable {
     List<Note>? filtered,
     String? errorMessage,
     Note? lastDeleted,
+    bool? showPinnedOnly,
+    NotesSortOption? sortBy,
   }) {
     return NotesState(
       isLoading: isLoading ?? this.isLoading,
@@ -32,9 +38,19 @@ class NotesState extends Equatable {
       filtered: filtered,
       errorMessage: errorMessage,
       lastDeleted: lastDeleted,
+      showPinnedOnly: showPinnedOnly ?? this.showPinnedOnly,
+      sortBy: sortBy ?? this.sortBy,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, notes, filtered, errorMessage, lastDeleted?.id];
+  List<Object?> get props => [
+    isLoading,
+    notes,
+    filtered,
+    errorMessage,
+    lastDeleted?.id,
+    showPinnedOnly,
+    sortBy,
+  ];
 }

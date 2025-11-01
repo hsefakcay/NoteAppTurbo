@@ -1,17 +1,46 @@
 import 'package:get_it/get_it.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../product/repository/notes_repository.dart';
+import '../../product/service/connectivity_service.dart';
 import '../../product/service/note_service.dart';
+import '../../product/service/notes_sort_filter_service.dart';
+import '../../product/service/offline_sync_coordinator.dart';
+import '../../product/service/sync_queue_service.dart';
 import '../network/api_client.dart';
 
 final GetIt serviceLocator = GetIt.instance;
 
+/// Dependency Injection kurulumu (Clean Architecture)
 Future<void> setupServiceLocator() async {
-  // Hive init should be called in main before this in practice; keep here for safety in tests.
-  if (!Hive.isBoxOpen('notes_box')) {
-    // no-op here; box opens in main.
-  }
+  // Core services
+  final apiClient = ApiClient();
+  serviceLocator.registerLazySingleton<ApiClient>(() => apiClient);
 
-  serviceLocator.registerLazySingleton<ApiClient>(() => ApiClient());
+  // Connectivity service
+  serviceLocator.registerLazySingleton<ConnectivityService>(
+    () => ConnectivityService(apiClient.client),
+  );
+
+  // Note service
   serviceLocator.registerLazySingleton<NoteService>(() => NoteService(serviceLocator<ApiClient>()));
+
+  // Sync queue service
+  serviceLocator.registerLazySingleton<SyncQueueService>(
+    () => SyncQueueService(serviceLocator<NoteService>()),
+  );
+
+  // Repository
+  serviceLocator.registerLazySingleton<NotesRepository>(() => NotesRepository());
+
+  // Sort & Filter service
+  serviceLocator.registerLazySingleton<NotesSortFilterService>(() => NotesSortFilterService());
+
+  // Offline sync coordinator
+  serviceLocator.registerLazySingleton<OfflineSyncCoordinator>(
+    () => OfflineSyncCoordinator(
+      noteService: serviceLocator<NoteService>(),
+      syncQueue: serviceLocator<SyncQueueService>(),
+      connectivity: serviceLocator<ConnectivityService>(),
+    ),
+  );
 }

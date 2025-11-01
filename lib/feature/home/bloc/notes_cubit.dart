@@ -1,84 +1,223 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
-import 'package:kartal/kartal.dart';
 
-import '../../../product/constants/app_constants.dart';
-import '../../../product/models/note.dart';
-import '../../../product/service/note_service.dart';
 import '../../../core/di/service_locator.dart';
+import '../../../product/constants/app_constants.dart';
+import '../../../product/enums/notes_sort_option.dart';
+import '../../../product/models/note.dart';
+import '../../../product/models/sync_operation.dart';
+import '../../../product/repository/notes_repository.dart';
+import '../../../product/service/connectivity_service.dart';
+import '../../../product/service/note_service.dart';
+import '../../../product/service/notes_sort_filter_service.dart';
+import '../../../product/service/offline_sync_coordinator.dart';
 
 part 'notes_state.dart';
 
+/// Not yönetimi Cubit (Refactored - Clean & SOLID)
+/// Single Responsibility: Sadece state management ve koordinasyon
 class NotesCubit extends Cubit<NotesState> {
   NotesCubit() : super(const NotesState.initial());
 
-  final NoteService _service = serviceLocator<NoteService>();
+  // Dependencies
+  final NoteService _noteService = serviceLocator<NoteService>();
+  final NotesRepository _repository = serviceLocator<NotesRepository>();
+  final NotesSortFilterService _sortFilter = serviceLocator<NotesSortFilterService>();
+  final OfflineSyncCoordinator _syncCoordinator = serviceLocator<OfflineSyncCoordinator>();
+  final ConnectivityService _connectivity = serviceLocator<ConnectivityService>();
 
+  StreamSubscription<bool>? _connectivitySubscription;
+
+  /// Init
   Future<void> init() async {
     await _ensureHive();
+    _initConnectivityListener(); // Hive açıldıktan SONRA listener başlat
+    await _connectivity.checkConnectivity(); // İlk kontrol
     await loadNotes();
+    _connectivity.startPeriodicCheck();
   }
 
+  /// Connectivity listener başlat
+  void _initConnectivityListener() {
+    _connectivitySubscription = _connectivity.connectivityStream.listen((isConnected) {
+      if (isConnected) {
+        _handleConnectionRestored();
+      }
+    });
+
+    // Sync complete stream'i dinle
+    // syncAll() çağırma, sadece result stream'i dinle
+    // _syncSubscription kaldırıldı - gerek yok
+  }
+
+  /// Bağlantı geri geldiğinde
+  Future<void> _handleConnectionRestored() async {
+    if (_syncCoordinator.hasPending) {
+      await _syncCoordinator.syncAll();
+      await loadNotes();
+    }
+  }
+
+  /// Hive başlat
   Future<void> _ensureHive() async {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(NoteAdapter());
     }
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(SyncOperationAdapter());
+    }
+
+    // Notes box
     if (!Hive.isBoxOpen(AppConstants.notesBox)) {
-      await Hive.openBox<Note>(AppConstants.notesBox);
+      try {
+        await Hive.openBox<Note>(AppConstants.notesBox);
+      } catch (e) {
+        // Corrupt box - yeniden oluştur
+        await Hive.deleteBoxFromDisk(AppConstants.notesBox);
+        await Hive.openBox<Note>(AppConstants.notesBox);
+      }
+    }
+
+    // Sync queue box
+    if (!Hive.isBoxOpen(AppConstants.syncQueueBox)) {
+      try {
+        await Hive.openBox<SyncOperation>(AppConstants.syncQueueBox);
+      } catch (e) {
+        // Corrupt box - yeniden oluştur
+        await Hive.deleteBoxFromDisk(AppConstants.syncQueueBox);
+        await Hive.openBox<SyncOperation>(AppConstants.syncQueueBox);
+      }
     }
   }
 
+  /// Notları yükle (Cache-First Strategy)
   Future<void> loadNotes() async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
+
+    // 1. Önce cache'den anında yükle (Instant feedback - ~0.1s)
+    final cachedNotes = await _repository.getAll();
+    _emitNotes(cachedNotes);
+
+    // 2. Background'da online sync dene
     try {
-      // first try online
-      final remote = await _service.fetchNotes();
-      await _cacheNotes(remote);
-      emit(state.copyWith(isLoading: false, notes: _sorted(remote)));
+      final remoteNotes = await _noteService.fetchNotes();
+      await _repository.replaceAll(remoteNotes);
+      // Online veriler farklıysa güncelle
+      _emitNotes(remoteNotes);
     } catch (e) {
-      // fallback to cache
-      final cached = await _getCachedNotes();
-      emit(state.copyWith(isLoading: false, notes: _sorted(cached), errorMessage: e.toString()));
+      // Online sync başarısız - cache zaten gösterildi
+      // Sadece bekleyen işlem varsa bilgilendir
+      if (_syncCoordinator.hasPending && cachedNotes.isNotEmpty) {
+        _emitNotes(
+          cachedNotes,
+          errorMessage: 'Offline - ${_syncCoordinator.pendingCount} işlem bekliyor',
+        );
+      }
     }
   }
 
+  /// Yeni not ekle (Local-first)
   Future<void> addNote(String title, String content, {bool pinned = false}) async {
     emit(state.copyWith(isLoading: true));
+
+    // Local not oluştur
+    final localNote = Note(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: title,
+      content: content,
+      pinned: pinned,
+      updatedAt: DateTime.now(),
+    );
+
     try {
-      final created = await _service.createNote(title: title, content: content, pinned: pinned);
-      await _upsertCache(created);
-      final updated = [...state.notes, created];
-      emit(state.copyWith(isLoading: false, notes: _sorted(updated)));
+      // Local'e kaydet
+      await _repository.upsert(localNote);
+      final allNotes = await _repository.getAll();
+      _emitNotes(allNotes);
+
+      // Backend'e sync et
+      final result = await _syncCoordinator.createNote(
+        localNote: localNote,
+        title: title,
+        content: content,
+        pinned: pinned,
+      );
+
+      // Backend ID ile güncelle (eğer sync olduysa)
+      if (result.isSynced && result.note.id != localNote.id) {
+        await _repository.delete(localNote.id);
+        await _repository.upsert(result.note);
+        final updatedNotes = await _repository.getAll();
+        _emitNotes(updatedNotes);
+      }
     } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+      emit(state.copyWith(isLoading: false, errorMessage: 'Not eklenirken hata: ${e.toString()}'));
     }
   }
 
+  /// Notu güncelle (Local-first)
   Future<void> updateNote(Note note) async {
     emit(state.copyWith(isLoading: true));
+
     try {
-      final updatedNote = await _service.updateNote(note);
-      await _upsertCache(updatedNote);
-      final updatedList = state.notes.map((n) => n.id == updatedNote.id ? updatedNote : n).toList();
-      emit(state.copyWith(isLoading: false, notes: _sorted(updatedList)));
+      // Local'e kaydet
+      await _repository.upsert(note);
+      final allNotes = await _repository.getAll();
+      _emitNotes(allNotes);
+
+      // Backend'e sync et
+      await _syncCoordinator.updateNote(note);
     } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+      emit(
+        state.copyWith(isLoading: false, errorMessage: 'Not güncellenirken hata: ${e.toString()}'),
+      );
     }
   }
 
+  /// Pin durumunu değiştir (Local-first)
+  Future<void> toggleNotePin(Note note) async {
+    emit(state.copyWith(isLoading: true));
+
+    final updatedNote = note.copyWith(pinned: !note.pinned, updatedAt: DateTime.now());
+
+    try {
+      // Local'e kaydet
+      await _repository.upsert(updatedNote);
+      final allNotes = await _repository.getAll();
+      _emitNotes(allNotes);
+
+      // Backend'e sync et
+      await _syncCoordinator.togglePin(updatedNote.id, updatedNote.pinned);
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Pin durumu değiştirilirken hata: ${e.toString()}',
+        ),
+      );
+    }
+  }
+
+  /// Notu sil (Local-first)
   Future<void> deleteNote(Note note) async {
     emit(state.copyWith(isLoading: true));
+
     try {
-      await _service.deleteNote(note.id);
-      await _removeFromCache(note.id);
-      final updatedList = state.notes.whereNot((n) => n.id == note.id).toList();
-      emit(state.copyWith(isLoading: false, notes: _sorted(updatedList), lastDeleted: note));
+      // Local'den sil
+      await _repository.delete(note.id);
+      final allNotes = await _repository.getAll();
+      _emitNotes(allNotes, lastDeleted: note);
+
+      // Backend'den sil
+      await _syncCoordinator.deleteNote(note);
     } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+      emit(state.copyWith(isLoading: false, errorMessage: 'Not silinirken hata: ${e.toString()}'));
     }
   }
 
+  /// Silinen notu geri yükle
   Future<void> restoreLastDeleted() async {
     final note = state.lastDeleted;
     if (note == null) return;
@@ -86,47 +225,84 @@ class NotesCubit extends Cubit<NotesState> {
     emit(state.copyWith(lastDeleted: null));
   }
 
+  /// Arama yap
   void search(String query) {
-    final lower = query.toLowerCase();
-    final filtered = state.notes
-        .where(
-          (n) => n.title.toLowerCase().contains(lower) || n.content.toLowerCase().contains(lower),
-        )
-        .toList();
-    emit(state.copyWith(filtered: _sorted(filtered)));
+    final filtered = _sortFilter.apply(
+      notes: state.notes,
+      showPinnedOnly: state.showPinnedOnly,
+      sortBy: state.sortBy,
+      searchQuery: query,
+    );
+    emit(state.copyWith(filtered: filtered));
   }
 
-  void clearSearch() => emit(state.copyWith(filtered: null));
-
-  List<Note> _sorted(List<Note> list) {
-    final copy = [...list];
-    copy.sort((a, b) {
-      if (a.pinned != b.pinned) return a.pinned ? -1 : 1;
-      return b.updatedAt.compareTo(a.updatedAt);
-    });
-    return copy;
+  /// Aramayı temizle
+  void clearSearch() {
+    final needsFilter = _sortFilter.needsFiltering(
+      showPinnedOnly: state.showPinnedOnly,
+      sortBy: state.sortBy,
+    );
+    emit(state.copyWith(filtered: needsFilter ? _applyCurrentFilters(state.notes) : null));
   }
 
-  Future<void> _cacheNotes(List<Note> notes) async {
-    final box = Hive.box<Note>(AppConstants.notesBox);
-    await box.clear();
-    for (final n in notes) {
-      await box.put(n.id, n);
+  /// Filtreleri güncelle
+  void updateFilters({bool? showPinnedOnly, NotesSortOption? sortBy}) {
+    final newShowPinnedOnly = showPinnedOnly ?? state.showPinnedOnly;
+    final newSortBy = sortBy ?? state.sortBy;
+
+    emit(state.copyWith(showPinnedOnly: newShowPinnedOnly, sortBy: newSortBy));
+
+    final needsFilter = _sortFilter.needsFiltering(
+      showPinnedOnly: newShowPinnedOnly,
+      sortBy: newSortBy,
+    );
+
+    if (needsFilter) {
+      final filtered = _sortFilter.apply(
+        notes: state.notes,
+        showPinnedOnly: newShowPinnedOnly,
+        sortBy: newSortBy,
+      );
+      emit(state.copyWith(filtered: filtered));
+    } else {
+      emit(state.copyWith(filtered: null));
     }
   }
 
-  Future<List<Note>> _getCachedNotes() async {
-    final box = Hive.box<Note>(AppConstants.notesBox);
-    return box.values.toList();
+  /// Mevcut filtreleri uygula
+  List<Note> _applyCurrentFilters(List<Note> notes) {
+    return _sortFilter.apply(
+      notes: notes,
+      showPinnedOnly: state.showPinnedOnly,
+      sortBy: state.sortBy,
+    );
   }
 
-  Future<void> _upsertCache(Note note) async {
-    final box = Hive.box<Note>(AppConstants.notesBox);
-    await box.put(note.id, note);
+  /// State'e notları emit et
+  void _emitNotes(List<Note> notes, {String? errorMessage, Note? lastDeleted}) {
+    final sorted = _sortFilter.sortOnly(notes, NotesSortOption.dateModified);
+
+    final needsFilter = _sortFilter.needsFiltering(
+      showPinnedOnly: state.showPinnedOnly,
+      sortBy: state.sortBy,
+    );
+
+    final filtered = needsFilter ? _applyCurrentFilters(sorted) : null;
+
+    emit(
+      state.copyWith(
+        isLoading: false,
+        notes: sorted,
+        filtered: filtered,
+        errorMessage: errorMessage,
+        lastDeleted: lastDeleted,
+      ),
+    );
   }
 
-  Future<void> _removeFromCache(String id) async {
-    final box = Hive.box<Note>(AppConstants.notesBox);
-    await box.delete(id);
+  @override
+  Future<void> close() {
+    _connectivitySubscription?.cancel();
+    return super.close();
   }
 }

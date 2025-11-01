@@ -36,6 +36,14 @@ class NoteService {
     return Note.fromJson(res.data!);
   }
 
+  Future<Note> togglePin(String noteId, bool pinned) async {
+    final Response<Map<String, dynamic>> res = await _apiClient.client.patch<Map<String, dynamic>>(
+      '/notes/$noteId/pin',
+      queryParameters: {'pinned': pinned},
+    );
+    return Note.fromJson(res.data!);
+  }
+
   Future<void> deleteNote(String id) async {
     await _apiClient.client.delete<void>('/notes/$id');
   }
