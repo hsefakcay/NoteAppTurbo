@@ -46,3 +46,6 @@ app.*.map.json
 
 ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
+
+# Environment variables
+assets/env/.env
