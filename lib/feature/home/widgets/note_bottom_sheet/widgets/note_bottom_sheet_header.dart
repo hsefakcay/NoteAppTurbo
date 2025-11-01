@@ -16,10 +16,7 @@ class NoteBottomSheetHeader extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.7),
-              ],
+              colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.7)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -64,4 +61,3 @@ class NoteBottomSheetHeader extends StatelessWidget {
     );
   }
 }
-
