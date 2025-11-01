@@ -4,7 +4,9 @@ Modern not uygulaması - Firebase Authentication, FastAPI backend ve offline-fir
 
 ## 🎬 Demo
 
-> Demo videosu eklenecek
+📹 **[Demo Video - Google Drive](LINK_BURAYA_EKLENECEK)**
+
+> Demo video'da tüm özellikler (authentication, CRUD, search/filter, pin, undo delete, AI flashcards) 50+ not ile test edilmiştir.
 
 ## ✨ Özellikler
 
@@ -85,7 +87,8 @@ lib/
 
 assets/
 ├── env/
-│   └── .env                   # Environment variables
+│   ├── .env.example           # Environment variables template
+│   └── .env                   # Environment variables (gitignored)
 └── translations/
     ├── tr.json                # Turkish translations
     └── en.json                # English translations
@@ -117,16 +120,32 @@ flutter pub get
 
 ### 4. Environment Dosyası
 
-`assets/env/.env` dosyası oluştur:
+`.env.example` dosyasını kopyalayıp `.env` olarak yeniden adlandırın:
+
+```bash
+cp assets/env/.env.example assets/env/.env
+```
+
+Platformunuza göre `API_BASE_URL` değerini düzenleyin:
 
 ```env
+# iOS Simulator / macOS / Linux / Windows için:
 API_BASE_URL=http://127.0.0.1:8000
+
+# Android Emulator için:
+API_BASE_URL=http://10.0.2.2:8000
+
+# Fiziksel cihaz için (local network):
+API_BASE_URL=http://192.168.x.x:8000
+
+# API path prefix
 API_PATH_PREFIX=/api
 ```
 
-**Not:** 
-- Android Emulator için: `http://10.0.2.2:8000`
-- iOS Simulator için: `http://127.0.0.1:8000`
+**Platform Notları:** 
+- **iOS Simulator:** `http://127.0.0.1:8000` (localhost)
+- **Android Emulator:** `http://10.0.2.2:8000` (emulator'ın host makineye erişimi)
+- **Fiziksel Cihaz:** Bilgisayarınızın local network IP'sini kullanın
 
 ## 🏃 Çalıştırma
 
@@ -325,16 +344,16 @@ dev_dependencies:
 
 ## 📸 Ekran Görüntüleri
 
-> Ekran görüntüleri eklenecek
+Demo video'da tüm ekranlar ve özellikler detaylı olarak gösterilmektedir:
 
 ### Ana Özellikler
 - 🎯 Onboarding akışı (4 ekran)
-- 📝 Not listesi (Light/Dark mode)
+- 📝 Not listesi (Light/Dark mode) - 50+ not ile test edildi
 - ✏️ Not düzenleme (Modern bottom sheet)
-- 🤖 AI Flashcard dialog
+- 🤖 AI Flashcard dialog (Google Gemini AI)
 - ⚙️ Ayarlar ekranı
-- 🌍 Dil değiştirme
-- 🎨 Tema seçimi
+- 🌍 Dil değiştirme (TR/EN)
+- 🎨 Tema seçimi (Light/Dark/System)
 
 ## 📝 Changelog
 
