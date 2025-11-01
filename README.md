@@ -6,6 +6,9 @@ Modern not uygulaması - Firebase Authentication, FastAPI backend ve offline-fir
 
 📹 **[Demo Video - Google Drive](https://drive.google.com/file/d/1fs61tjXk6veBm26maLLRoaYU1S69C5kZ/view?usp=sharing)**
 
+https://github.com/user-attachments/assets/e3acc6c1-3c7c-40bb-872f-bd1e0b2c7b39
+
+
 > Demo video'da tüm özellikler (authentication, CRUD, search/filter, pin, undo delete, AI flashcards) 50+ not ile test edilmiştir.
 
 ## ✨ Özellikler
