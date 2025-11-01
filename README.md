@@ -4,7 +4,7 @@ Modern not uygulaması - Firebase Authentication, FastAPI backend ve offline-fir
 
 ## 🎬 Demo
 
-> Demo videosu eklenecek
+> https://drive.google.com/file/d/1fs61tjXk6veBm26maLLRoaYU1S69C5kZ/view?usp=sharing
 
 ## ✨ Özellikler
 
