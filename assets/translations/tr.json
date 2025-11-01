@@ -1,0 +1,150 @@
+{
+  "app": {
+    "title": "Note App Turbo"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "email": "Email",
+    "password": "Şifre",
+    "passwordConfirm": "Şifre Tekrar",
+    "emailHint": "Email adresiniz",
+    "passwordHint": "Şifreniz",
+    "passwordHintMin": "Şifreniz (en az 6 karakter)",
+    "passwordConfirmHint": "Şifrenizi tekrar girin",
+    "forgotPassword": "Şifremi Unuttum?",
+    "loginTitle": "Üretkenliğe hazır mısınız?",
+    "registerTitle": "Hemen başlayalım!",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Hesabınız var mı?",
+    "forgotPasswordSoon": "Şifre sıfırlama yakında eklenecek",
+    "passwordRequired": "Şifre tekrar gerekli",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "signOut": "Çıkış Yap",
+    "signOutConfirm": "Çıkış yapmak istediğinize emin misiniz?",
+    "cancel": "İptal"
+  },
+  "home": {
+    "title": "Notlar",
+    "newNote": "Yeni Not Ekle",
+    "settings": "Ayarlar",
+    "searchHint": "Notlarda ara...",
+    "filterAndSort": "Filtrele ve Sırala",
+    "emptyNotesTitle": "Henüz not yok",
+    "emptyNotesMessage": "Yeni not eklemek için + butonuna tıklayın",
+    "notFoundTitle": "Not bulunamadı",
+    "notFoundMessage": "Farklı bir arama deneyin",
+    "deleted": "Silindi",
+    "undo": "Geri Al"
+  },
+  "note": {
+    "titleHint": "Not başlığını girin",
+    "contentHint": "Notunuzu buraya yazın...",
+    "title": "Başlık",
+    "content": "İçerik",
+    "pinned": "Sabitle",
+    "pinNote": "Üste Sabitle",
+    "unpinNote": "Sabitlemeyi Kaldır",
+    "delete": "Sil",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "createFlashcard": "Flashcard Oluştur",
+    "flashcardCreating": "Flashcard'lar oluşturuluyor...",
+    "flashcardEmptyError": "Not içeriği boş. Flashcard oluşturmak için içerik gereklidir.",
+    "errorAdding": "Not eklenirken hata",
+    "errorUpdating": "Not güncellenirken hata",
+    "errorDeleting": "Not silinirken hata",
+    "errorPinning": "Pin durumu değiştirilirken hata",
+    "errorSync": "Senkronizasyon hatası"
+  },
+  "filter": {
+    "title": "Filtrele ve Sırala",
+    "pinnedOnly": "Sadece sabitlenenler",
+    "pinnedOnlyDescription": "Yalnızca sabitlenmiş notları göster",
+    "sorting": "Sıralama",
+    "reset": "Sıfırla",
+    "apply": "Uygula"
+  },
+  "sort": {
+    "dateModified": "Son düzenleme",
+    "dateModifiedDesc": "Önce en son düzenlenenler",
+    "dateCreated": "Tarih (Eski → Yeni)",
+    "dateCreatedDesc": "Önce en eski notlar",
+    "titleAZ": "Başlık (A-Z)",
+    "titleAZDesc": "Alfabetik sıralama",
+    "titleZA": "Başlık (Z-A)",
+    "titleZADesc": "Ters alfabetik sıralama"
+  },
+  "flashcard": {
+    "close": "Kapat",
+    "showAnswer": "Cevabı Göster",
+    "hideAnswer": "Cevabı Gizle",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "question": "Soru",
+    "answer": "Cevap",
+    "of": "/"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "account": "Hesap",
+    "subscription": "Abonelik",
+    "support": "Destek",
+    "changeLanguage": "Dili Değiştir",
+    "theme": "Tema",
+    "themeLight": "Açık",
+    "themeDark": "Koyu",
+    "themeSystem": "Sistem",
+    "themeSelect": "Tema Seç",
+    "failedUploads": "Başarısız Yüklemeler",
+    "currentPlan": "Mevcut Plan",
+    "freePlan": "Ücretsiz Plan",
+    "restorePurchases": "Satın Almaları Geri Yükle",
+    "accessCode": "Erişim Kodu",
+    "contactSupport": "Desteğe Ulaş",
+    "goToWebsite": "Web Sitesine Git",
+    "upgradePremium": "Sınırsız'a Yükselt",
+    "comingSoon": "Yakında",
+    "comingSoonMessage": "Bu özellik yakında eklenecek.",
+    "ok": "Tamam"
+  },
+  "sync": {
+    "error": "Senkronizasyon hatası",
+    "retrying": "Yeniden deneniyor...",
+    "success": "Senkronize edildi"
+  },
+  "error": {
+    "pageNotFound": "Sayfa bulunamadı"
+  },
+  "validation": {
+    "emailRequired": "Email gerekli",
+    "emailInvalid": "Geçerli bir email giriniz",
+    "passwordRequired": "Şifre gerekli",
+    "passwordMinLength": "Şifre en az 6 karakter olmalı"
+  },
+  "onboarding": {
+    "skip": "Atla",
+    "next": "İleri",
+    "getStarted": "Başlayalım",
+    "welcome": {
+      "title": "Not Tutmayı Yeniden Keşfet",
+      "description": "Hızlı, güvenli ve senkronize not alma deneyimi. Düşüncelerinizi istediğiniz zaman, istediğiniz yerden kaydedin."
+    },
+    "aiFlashcard": {
+      "title": "AI ile Otomatik Flashcard",
+      "description": "Notlarınızdan yapay zeka desteğiyle otomatik öğrenme kartları oluşturun. Öğrenmeyi hızlandırın, bilgiyi pekiştirin.",
+      "badge": "AI Destekli"
+    },
+    "sync": {
+      "title": "Her Yerden Erişim",
+      "description": "Notlarınız tüm cihazlarınızda otomatik senkronize. Telefon, tablet veya bilgisayar - verileriniz her zaman sizinle."
+    },
+    "ready": {
+      "title": "Hazır mısınız?",
+      "description": "Üretkenlik yolculuğunuz başlasın. Hemen giriş yapın veya yeni bir hesap oluşturun.",
+      "login": "Giriş Yap",
+      "register": "Kayıt Ol"
+    }
+  }
+}
+

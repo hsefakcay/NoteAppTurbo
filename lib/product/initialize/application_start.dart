@@ -37,6 +37,7 @@ class ApplicationStart {
       Hive.registerAdapter(NoteAdapter());
     }
     await Hive.openBox<Note>(AppConstants.notesBox);
+    await Hive.openBox<dynamic>(AppConstants.appSettingsBox);
 
     await setupServiceLocator();
   }

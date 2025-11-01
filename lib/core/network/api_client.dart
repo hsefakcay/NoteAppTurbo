@@ -133,10 +133,8 @@ class ApiClient {
 
       final payload =
           json.decode(utf8.decode(base64Url.decode(normalized(parts[1])))) as Map<String, dynamic>;
-      final iss = payload['iss'];
-      final aud = payload['aud'];
-      final sub = payload['sub'];
-      final exp = payload['exp'];
+      // Token claims successfully parsed (payload available for future use)
+      final _ = payload; // Suppress unused warning
     } catch (_) {
       // ignore: avoid_print
       print('[Auth Debug] token claims parse failed');

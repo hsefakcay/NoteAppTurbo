@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'settings_menu_item.dart';
 import 'settings_section.dart';
@@ -16,14 +17,14 @@ class SettingsSupportSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: 'Support',
+      title: 'settings.support'.tr(),
       children: [
         SettingsMenuItem(
           icon: Icons.support_agent_outlined,
-          title: 'Contact Support',
+          title: 'settings.contactSupport'.tr(),
           onTap: onContactSupport,
         ),
-        SettingsMenuItem(icon: Icons.language, title: 'Go to Website', onTap: onGoToWebsite),
+        SettingsMenuItem(icon: Icons.language, title: 'settings.goToWebsite'.tr(), onTap: onGoToWebsite),
       ],
     );
   }

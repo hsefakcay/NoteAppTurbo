@@ -2,47 +2,93 @@
 
 Modern not uygulaması - Firebase Authentication, FastAPI backend ve offline-first mimari ile.
 
+## 🎬 Demo
+
+> Demo videosu eklenecek
+
 ## ✨ Özellikler
 
+### 🎯 Temel Özellikler
 - 🔐 **Firebase Authentication** - Email/Password ile güvenli giriş
 - 📝 **CRUD Operations** - Not oluştur, düzenle, sil
 - 📌 **Pin to Top** - Önemli notları üstte sabitle
-- 🔍 **Search** - Başlık ve içerikte arama
-- 💾 **Offline Support** - Hive ile local caching
-- 🎨 **Modern UI** - Clean ve responsive tasarım
-- 🔄 **Auto Sync** - Otomatik senkronizasyon
+- 🔍 **Search & Filter** - Başlık ve içerikte arama, sıralama
+- 💾 **Offline-First** - Hive ile local caching ve otomatik sync
+- 🎨 **Modern UI** - Material Design 3 ile responsive tasarım
 - ↩️ **Undo Delete** - Silinen notları geri al
+
+### 🤖 AI Özellikleri
+- ✨ **AI-Powered Flashcards** - Notlarınızdan otomatik öğrenme kartları oluşturun
+- 🧠 **Smart Learning** - Yapay zeka destekli içerik analizi
+
+### 🌍 Çok Dilli Destek
+- 🇹🇷 **Türkçe** - Tam Türkçe arayüz
+- 🇬🇧 **English** - Full English interface
+- 🔄 **Runtime Switching** - Uygulama içinden dil değiştirme
+- 📝 **Localized Errors** - Çok dilli hata mesajları
+
+### 🎨 UI/UX
+- 🌓 **Dark/Light Mode** - Sistem teması ile otomatik geçiş
+- 📱 **Responsive Design** - Tüm ekran boyutları için optimize
+- 🎭 **Modern Dialogs** - Material Design 3 uyumlu diyaloglar
+- 🎯 **Onboarding** - İlk kullanıcılar için rehber ekranı
+- 🎨 **Gradient Buttons** - Modern görsel hiyerarşi
 
 ## 🛠️ Teknolojiler
 
+### Core
 - **Flutter 3.9+** - Cross-platform framework
 - **Bloc/Cubit** - State management
 - **Firebase Auth** - Authentication
-- **Dio** - HTTP client
-- **Hive** - Local database (offline support)
-- **GetIt** - Dependency injection
+- **Dio** - HTTP client with interceptors
+- **Hive** - Local database (offline-first)
+- **GetIt** - Dependency injection (Clean Architecture)
+
+### UI/UX
+- **Kartal** - Responsive utility extensions
+- **Easy Localization** - i18n support
+- **Smooth Page Indicator** - Onboarding indicators
+
+### Code Quality
 - **Equatable** - Value equality
-- **Kartal** - Utility extensions
+- **Very Good Analysis** - Strict linting
+- **Flutter Lints** - Best practices
 
 ## 📁 Proje Yapısı
 
 ```
 lib/
 ├── core/
-│   ├── di/              # Dependency injection (GetIt)
-│   └── network/         # API client (Dio + interceptors)
+│   ├── di/                    # Dependency injection (GetIt)
+│   └── network/               # API client (Dio + interceptors)
 ├── feature/
-│   ├── auth/            # Login & Register
-│   │   └── bloc/        # Auth Cubit
-│   ├── home/            # Notes list & CRUD
-│   │   └── bloc/        # Notes Cubit
-│   └── splash/          # Splash screen
+│   ├── auth/                  # Login & Register
+│   │   └── bloc/              # Auth Cubit
+│   ├── home/                  # Notes list & CRUD
+│   │   ├── bloc/              # Notes & Flashcard Cubits
+│   │   ├── dialogs/           # Flashcard dialog
+│   │   └── widgets/           # Note cards, search, filters
+│   ├── onboarding/            # First-launch onboarding
+│   ├── settings/              # Settings & theme
+│   │   ├── bloc/              # Settings Cubit
+│   │   ├── dialogs/           # Theme, language dialogs
+│   │   └── widgets/           # Settings sections
+│   └── splash/                # Splash screen
 ├── product/
-│   ├── constants/       # App constants
-│   ├── initialize/      # App initialization
-│   ├── models/          # Data models
-│   └── service/         # API services
+│   ├── constants/             # App constants & routes
+│   ├── initialize/            # App initialization
+│   ├── models/                # Data models (Note, Flashcard, etc.)
+│   ├── routes/                # App router
+│   ├── service/               # API & local services
+│   └── widgets/               # Shared widgets
 └── main.dart
+
+assets/
+├── env/
+│   └── .env                   # Environment variables
+└── translations/
+    ├── tr.json                # Turkish translations
+    └── en.json                # English translations
 ```
 
 ## ⚙️ Kurulum
@@ -128,26 +174,62 @@ flutter test test/widget_test.dart
 
 ## 📱 Özellikler Detayı
 
-### Authentication
+### 🎯 Onboarding Flow
+- **Welcome Screen** - Uygulama tanıtımı
+- **AI Flashcard Highlight** - AI özelliğinin tanıtımı
+- **Sync Info** - Cloud senkronizasyon bilgisi
+- **Call-to-Action** - Login/Register yönlendirmesi
+- **Skip Option** - İsteğe bağlı atlama
+- **Hive Storage** - Onboarding durumu kalıcı olarak saklanır
+
+### 🌍 Localization System
+- **Runtime Language Switching** - Uygulama yeniden başlatmaya gerek yok
+- **JSON-based Translations** - Kolay yönetilebilir çeviri dosyaları
+- **Context-aware** - Easy Localization ile güçlü i18n
+- **Comprehensive Coverage** - Tüm UI, validations, errors localized
+- **Persistent Selection** - Dil seçimi kaydedilir
+
+### 🤖 AI-Powered Flashcards
+- **Automatic Generation** - Notlardan otomatik flashcard oluşturma
+- **Smart Analysis** - AI ile içerik analizi
+- **Interactive Learning** - Soru-cevap formatı
+- **Swipeable Cards** - Modern kart geçiş animasyonları
+- **Progress Tracking** - Flashcard ilerleme takibi
+
+### 🔐 Authentication
 - Firebase email/password authentication
 - Auto login (token persistence)
 - Logout functionality
+- Localized error messages
 
-### Notes Management
+### 📝 Notes Management
 - Create, read, update, delete notes
 - Pin/unpin important notes
-- Real-time search
-- Sorted by pinned status & update time
+- Real-time search & filter
+- Multiple sort options (date, title, pinned)
+- Undo delete with SnackBar
+- Modern bottom sheet for note editing
 
-### Offline Support
+### 💾 Offline-First Architecture
 - Hive local database
-- Automatic sync when online
+- Automatic background sync
+- Sync queue for offline actions
 - Fallback to cache when offline
+- Network connectivity monitoring
 
-### Error Handling
+### 🎨 Modern UI
+- Material Design 3 components
+- Dark/Light/System theme modes
+- Responsive design with Kartal
+- Gradient buttons
+- Modern dialogs with icons
+- Smooth animations and transitions
+
+### 🔧 Error Handling
 - Token refresh on 401
-- Retry mechanism
-- User-friendly error messages
+- Retry mechanism for failed requests
+- Localized user-friendly error messages
+- Offline error fallbacks
 
 ## 🔧 Mimari
 
@@ -195,21 +277,84 @@ Backend kurulumu için `../note_app_backend/README.md` dosyasına bakın.
 
 ```yaml
 dependencies:
+  # Core
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Firebase
   firebase_core: ^3.15.2
   firebase_auth: ^5.2.0
+
+  # Networking
   dio: ^5.7.0
+
+  # Local Storage
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+
+  # State Management
   flutter_bloc: ^9.0.0
   equatable: ^2.0.5
+
+  # Dependency Injection
   get_it: ^7.7.0
+
+  # Utilities
   flutter_dotenv: ^5.1.0
   kartal: ^3.5.0
 
+  # Localization
+  easy_localization: ^3.0.7
+
+  # UI Components
+  smooth_page_indicator: ^1.2.0+3
+
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # Linting
   flutter_lints: ^5.0.0
   very_good_analysis: ^7.0.0
+  
+  # Code Generation
+  build_runner: ^2.4.13
+  hive_generator: ^2.0.1
 ```
+
+## 📸 Ekran Görüntüleri
+
+> Ekran görüntüleri eklenecek
+
+### Ana Özellikler
+- 🎯 Onboarding akışı (4 ekran)
+- 📝 Not listesi (Light/Dark mode)
+- ✏️ Not düzenleme (Modern bottom sheet)
+- 🤖 AI Flashcard dialog
+- ⚙️ Ayarlar ekranı
+- 🌍 Dil değiştirme
+- 🎨 Tema seçimi
+
+## 📝 Changelog
+
+### v2.0.0 (Latest) - Localization & Onboarding
+- ✨ Full localization support (TR/EN)
+- 🎯 Modern onboarding flow
+- 🤖 AI-powered flashcards
+- 🎨 Material Design 3 UI improvements
+- 📱 Responsive design with Kartal
+- 🌓 Enhanced dark mode
+- 🎭 Modern dialogs
+- 🔧 Hive-based settings storage
+
+### v1.0.0 - Initial Release
+- 🔐 Firebase Authentication
+- 📝 CRUD operations for notes
+- 💾 Offline-first architecture
+- 🔄 Auto sync
+- 📌 Pin to top
+- 🔍 Search functionality
 
 ## 🐛 Sorun Giderme
 

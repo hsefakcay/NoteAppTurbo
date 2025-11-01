@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../../../product/models/note.dart';
-import '../widgets/note_bottom_sheet.dart';
+import '../widgets/note_bottom_sheet/index.dart';
 
 /// Not bottom sheet işlemleri için mixin
 mixin NoteDialogMixin<T extends StatefulWidget> on State<T> {

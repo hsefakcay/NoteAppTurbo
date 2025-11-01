@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import '../constants/app_constants.dart';
 import '../models/note.dart';
@@ -49,6 +50,8 @@ class SyncQueueService {
         successCount++;
       } catch (e) {
         failureCount++;
+        debugPrint('Sync operation failed: ${operation.type} - ${operation.noteId}');
+        debugPrint('Error: $e');
         // İşlem başarısız oldu, kuyrukta kalsın
       }
     }

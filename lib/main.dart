@@ -1,22 +1,27 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/theme/theme_cubit.dart';
-import 'product/initialize/application_start.dart';
 import 'feature/auth/bloc/auth_cubit.dart';
-import 'feature/auth/login_view.dart';
-import 'feature/auth/register_view.dart';
-import 'feature/home/bloc/notes_cubit.dart';
-import 'feature/home/home_view.dart';
-import 'feature/settings/bloc/settings_cubit.dart';
-import 'feature/settings/settings_view.dart';
-import 'feature/splash/splash_view.dart';
 import 'product/constants/app_constants.dart';
 import 'product/constants/app_theme.dart';
+import 'product/initialize/application_start.dart';
+import 'product/routes/app_router.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await ApplicationStart.init();
-  runApp(const MyApp());
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('tr'), Locale('en')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,42 +29,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ThemeCubit(),
+    // Root level BlocProvider'lar - tüm uygulama için
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => AuthCubit()),
+      ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Note App Turbo',
-
-            // Tema yapılandırması
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeState.themeMode,
-
             initialRoute: AppConstants.routeSplash,
-            routes: {
-              AppConstants.routeSplash: (_) =>
-                  BlocProvider(create: (_) => AuthCubit(), child: const SplashView()),
-              AppConstants.routeLogin: (_) =>
-                  BlocProvider(create: (_) => AuthCubit(), child: const LoginView()),
-              AppConstants.routeRegister: (_) =>
-                  BlocProvider(create: (_) => AuthCubit(), child: const RegisterView()),
-              AppConstants.routeHome: (_) => MultiBlocProvider(
-                providers: [
-                  BlocProvider(create: (_) => AuthCubit()),
-                  BlocProvider(create: (_) => NotesCubit()),
-                ],
-                child: const HomeView(),
-              ),
-              AppConstants.routeSettings: (_) => MultiBlocProvider(
-                providers: [
-                  BlocProvider(create: (_) => SettingsCubit()),
-                  BlocProvider(create: (_) => AuthCubit()),
-                ],
-                child: const SettingsView(),
-              ),
-            },
+            routes: AppRouter.routes,
+            onUnknownRoute: AppRouter.onUnknownRoute,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
           );
         },
       ),

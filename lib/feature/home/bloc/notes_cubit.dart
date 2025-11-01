@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
@@ -8,7 +9,7 @@ import '../../../product/constants/app_constants.dart';
 import '../../../product/enums/notes_sort_option.dart';
 import '../../../product/models/note.dart';
 import '../../../product/models/sync_operation.dart';
-import '../../../product/repository/notes_repository.dart';
+import '../../../product/service/note_local_data_source.dart';
 import '../../../product/service/connectivity_service.dart';
 import '../../../product/service/note_service.dart';
 import '../../../product/service/notes_sort_filter_service.dart';
@@ -23,7 +24,7 @@ class NotesCubit extends Cubit<NotesState> {
 
   // Dependencies
   final NoteService _noteService = serviceLocator<NoteService>();
-  final NotesRepository _repository = serviceLocator<NotesRepository>();
+  final NoteLocalDataSource _repository = serviceLocator<NoteLocalDataSource>();
   final NotesSortFilterService _sortFilter = serviceLocator<NotesSortFilterService>();
   final OfflineSyncCoordinator _syncCoordinator = serviceLocator<OfflineSyncCoordinator>();
   final ConnectivityService _connectivity = serviceLocator<ConnectivityService>();
@@ -108,13 +109,8 @@ class NotesCubit extends Cubit<NotesState> {
       _emitNotes(remoteNotes);
     } catch (e) {
       // Online sync başarısız - cache zaten gösterildi
-      // Sadece bekleyen işlem varsa bilgilendir
-      if (_syncCoordinator.hasPending && cachedNotes.isNotEmpty) {
-        _emitNotes(
-          cachedNotes,
-          errorMessage: 'Offline - ${_syncCoordinator.pendingCount} işlem bekliyor',
-        );
-      }
+      // Offline mesajı gösterilmiyor (kullanıcı talebi)
+      _emitNotes(cachedNotes);
     }
   }
 
@@ -146,14 +142,26 @@ class NotesCubit extends Cubit<NotesState> {
       );
 
       // Backend ID ile güncelle (eğer sync olduysa)
-      if (result.isSynced && result.note.id != localNote.id) {
-        await _repository.delete(localNote.id);
-        await _repository.upsert(result.note);
+      if (result.isSynced) {
+        if (result.note.id != localNote.id) {
+          // Server'dan farklı ID geldiyse, local ID'yi sil ve server ID'yi kullan
+          await _repository.delete(localNote.id);
+          await _repository.upsert(result.note);
+        } else {
+          // Aynı ID ise (nadir durum), server'dan gelen note'u kullan
+          await _repository.upsert(result.note);
+        }
         final updatedNotes = await _repository.getAll();
         _emitNotes(updatedNotes);
       }
+      // Sync başarılı olsun ya da olmasın, state zaten _emitNotes ile güncelleniyor
     } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: 'Not eklenirken hata: ${e.toString()}'));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: '${'note.errorAdding'.tr()}: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -171,7 +179,10 @@ class NotesCubit extends Cubit<NotesState> {
       await _syncCoordinator.updateNote(note);
     } catch (e) {
       emit(
-        state.copyWith(isLoading: false, errorMessage: 'Not güncellenirken hata: ${e.toString()}'),
+        state.copyWith(
+          isLoading: false,
+          errorMessage: '${'note.errorUpdating'.tr()}: ${e.toString()}',
+        ),
       );
     }
   }
@@ -194,7 +205,7 @@ class NotesCubit extends Cubit<NotesState> {
       emit(
         state.copyWith(
           isLoading: false,
-          errorMessage: 'Pin durumu değiştirilirken hata: ${e.toString()}',
+          errorMessage: '${'note.errorPinning'.tr()}: ${e.toString()}',
         ),
       );
     }
@@ -213,7 +224,12 @@ class NotesCubit extends Cubit<NotesState> {
       // Backend'den sil
       await _syncCoordinator.deleteNote(note);
     } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: 'Not silinirken hata: ${e.toString()}'));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: '${'note.errorDeleting'.tr()}: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -269,6 +285,40 @@ class NotesCubit extends Cubit<NotesState> {
     }
   }
 
+  /// Manuel senkronizasyon - Bekleyen tüm işlemleri sync et
+  Future<void> syncAllPending() async {
+    if (!_syncCoordinator.hasPending) {
+      // Bekleyen işlem yok, state'i güncelle
+      emit(state.copyWith(isLoading: false, errorMessage: null));
+      return;
+    }
+
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+
+    try {
+      final result = await _syncCoordinator.syncAll();
+      await loadNotes(); // Sync sonrası notları yeniden yükle
+
+      if (result.hasFailure) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage:
+                '${result.successCount} işlem başarılı, ${result.failureCount} işlem başarısız',
+          ),
+        );
+      } else {
+        // Başarılı sync - state zaten loadNotes() tarafından güncelleniyor
+        emit(state.copyWith(isLoading: false, errorMessage: null));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(isLoading: false, errorMessage: '${'note.errorSync'.tr()}: ${e.toString()}'),
+      );
+      rethrow; // Hatayı yukarı fırlat ki SettingsView'da yakalansın
+    }
+  }
+
   /// Mevcut filtreleri uygula
   List<Note> _applyCurrentFilters(List<Note> notes) {
     return _sortFilter.apply(
@@ -299,6 +349,9 @@ class NotesCubit extends Cubit<NotesState> {
       ),
     );
   }
+
+  /// Bekleyen sync işlemi var mı?
+  bool get hasPendingSync => _syncCoordinator.hasPending;
 
   @override
   Future<void> close() {

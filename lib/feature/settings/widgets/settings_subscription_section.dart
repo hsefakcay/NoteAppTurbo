@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'settings_menu_item.dart';
 import 'settings_section.dart';
@@ -18,20 +19,20 @@ class SettingsSubscriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: 'Subscription',
+      title: 'settings.subscription'.tr(),
       children: [
         SettingsMenuItem(
           icon: Icons.card_membership_outlined,
-          title: 'Current Plan',
+          title: 'settings.currentPlan'.tr(),
           trailing: _PlanBadge(),
           onTap: onCurrentPlan,
         ),
         SettingsMenuItem(
           icon: Icons.restore,
-          title: 'Restore Purchases',
+          title: 'settings.restorePurchases'.tr(),
           onTap: onRestorePurchases,
         ),
-        SettingsMenuItem(icon: Icons.vpn_key_outlined, title: 'Access Code', onTap: onAccessCode),
+        SettingsMenuItem(icon: Icons.vpn_key_outlined, title: 'settings.accessCode'.tr(), onTap: onAccessCode),
       ],
     );
   }
@@ -48,7 +49,7 @@ class _PlanBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
       ),
-      child: Text('Free Plan', style: Theme.of(context).textTheme.labelLarge),
+      child: Text('settings.freePlan'.tr(), style: Theme.of(context).textTheme.labelLarge),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kartal/kartal.dart';
@@ -80,10 +81,10 @@ class _LoginViewState extends State<LoginView> {
                       context.sized.emptySizedHeightBoxNormal,
 
                       // Başlık
-                      Text('Üretkenliğe hazır mısınız?', style: theme.textTheme.displayMedium),
+                      Text('auth.loginTitle'.tr(), style: theme.textTheme.displayMedium),
                       context.sized.emptySizedHeightBoxLow3x,
                       Text(
-                        'Giriş Yapın',
+                        'auth.login'.tr(),
                         style: theme.textTheme.displayMedium?.copyWith(
                           color: context.general.colorScheme.primary,
                         ),
@@ -91,19 +92,25 @@ class _LoginViewState extends State<LoginView> {
                       context.sized.emptySizedHeightBoxNormal,
 
                       // Email Field
-                      Text('Email', style: theme.textTheme.titleLarge),
+                      Text('auth.email'.tr(), style: theme.textTheme.titleLarge),
                       context.sized.emptySizedHeightBoxLow,
 
-                      CustomTextField.email(controller: _emailCtrl, hintText: 'Email adresiniz'),
+                      CustomTextField.email(
+                        controller: _emailCtrl,
+                        hintText: 'auth.emailHint'.tr(),
+                      ),
 
                       context.sized.emptySizedHeightBoxLow3x,
 
                       // Password Field
-                      Text('Şifre', style: theme.textTheme.titleLarge),
+                      Text('auth.password'.tr(), style: theme.textTheme.titleLarge),
 
                       context.sized.emptySizedHeightBoxLow,
 
-                      CustomTextField.password(controller: _passwordCtrl, hintText: 'Şifreniz'),
+                      CustomTextField.password(
+                        controller: _passwordCtrl,
+                        hintText: 'auth.passwordHint'.tr(),
+                      ),
 
                       context.sized.emptySizedHeightBoxLow,
 
@@ -113,18 +120,18 @@ class _LoginViewState extends State<LoginView> {
                         child: TextButton(
                           onPressed: () {
                             // TODO: Implement forgot password
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Şifre sıfırlama yakında eklenecek')),
-                            );
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text('auth.forgotPasswordSoon'.tr())));
                           },
-                          child: const Text('Şifremi Unuttum?'),
+                          child: Text('auth.forgotPassword'.tr()),
                         ),
                       ),
                       context.sized.emptySizedHeightBoxNormal,
 
                       // Login Button
                       GradientButton(
-                        text: 'Giriş Yap',
+                        text: 'auth.login'.tr(),
                         isLoading: state.isLoading,
                         onPressed: state.isLoading
                             ? null
@@ -145,13 +152,17 @@ class _LoginViewState extends State<LoginView> {
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            Text('Hesabınız yok mu? ', style: context.general.textTheme.bodyMedium),
+                            Text(
+                              'auth.noAccount'.tr(),
+                              style: context.general.textTheme.bodyMedium,
+                            ),
+                            const SizedBox(width: 4),
                             InkWell(
                               onTap: () => Navigator.of(
                                 context,
                               ).pushReplacementNamed(AppConstants.routeRegister),
                               child: Text(
-                                'Kayıt Ol',
+                                'auth.register'.tr(),
                                 style: context.general.textTheme.bodyMedium?.copyWith(
                                   color: context.general.colorScheme.primary,
                                   fontWeight: FontWeight.w600,

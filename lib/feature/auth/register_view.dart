@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kartal/kartal.dart';
@@ -82,10 +83,10 @@ class _RegisterViewState extends State<RegisterView> {
                       context.sized.emptySizedHeightBoxNormal,
 
                       // Başlık
-                      Text('Hemen başlayalım!', style: theme.textTheme.displayMedium),
+                      Text('auth.registerTitle'.tr(), style: theme.textTheme.displayMedium),
                       context.sized.emptySizedHeightBoxLow3x,
                       Text(
-                        'Kayıt Olun',
+                        'auth.register'.tr(),
                         style: theme.textTheme.displayMedium?.copyWith(
                           color: context.general.colorScheme.primary,
                         ),
@@ -93,32 +94,32 @@ class _RegisterViewState extends State<RegisterView> {
                       context.sized.emptySizedHeightBoxNormal,
 
                       // Email Field
-                      Text('Email', style: theme.textTheme.titleLarge),
+                      Text('auth.email'.tr(), style: theme.textTheme.titleLarge),
                       context.sized.emptySizedHeightBoxLow,
-                      CustomTextField.email(controller: _emailCtrl, hintText: 'Email adresiniz'),
+                      CustomTextField.email(controller: _emailCtrl, hintText: 'auth.emailHint'.tr()),
                       context.sized.emptySizedHeightBoxLow,
 
                       // Password Field
-                      Text('Şifre', style: theme.textTheme.titleLarge),
+                      Text('auth.password'.tr(), style: theme.textTheme.titleLarge),
                       context.sized.emptySizedHeightBoxLow,
                       CustomTextField.password(
                         controller: _passwordCtrl,
-                        hintText: 'Şifreniz (en az 6 karakter)',
+                        hintText: 'auth.passwordHintMin'.tr(),
                       ),
                       context.sized.emptySizedHeightBoxLow,
 
                       // Confirm Password Field
-                      Text('Şifre Tekrar', style: theme.textTheme.titleLarge),
+                      Text('auth.passwordConfirm'.tr(), style: theme.textTheme.titleLarge),
                       context.sized.emptySizedHeightBoxLow,
                       CustomTextField.password(
                         controller: _confirmPasswordCtrl,
-                        hintText: 'Şifrenizi tekrar girin',
+                        hintText: 'auth.passwordConfirmHint'.tr(),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Şifre tekrar gerekli';
+                            return 'auth.passwordRequired'.tr();
                           }
                           if (value != _passwordCtrl.text) {
-                            return 'Şifreler eşleşmiyor';
+                            return 'auth.passwordMismatch'.tr();
                           }
                           return null;
                         },
@@ -127,7 +128,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                       // Register Button
                       GradientButton(
-                        text: 'Kayıt Ol',
+                        text: 'auth.register'.tr(),
                         isLoading: state.isLoading,
                         onPressed: state.isLoading
                             ? null
@@ -148,13 +149,14 @@ class _RegisterViewState extends State<RegisterView> {
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            Text('Hesabınız var mı? ', style: theme.textTheme.bodyMedium),
+                            Text('auth.hasAccount'.tr(), style: theme.textTheme.bodyMedium),
+                            const SizedBox(width: 4),
                             InkWell(
                               onTap: () => Navigator.of(
                                 context,
                               ).pushReplacementNamed(AppConstants.routeLogin),
                               child: Text(
-                                'Giriş Yap',
+                                'auth.login'.tr(),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.primary,
                                   fontWeight: FontWeight.w600,

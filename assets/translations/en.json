@@ -1,0 +1,150 @@
+{
+  "app": {
+    "title": "Note App Turbo"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirm": "Confirm Password",
+    "emailHint": "Your email address",
+    "passwordHint": "Your password",
+    "passwordHintMin": "Your password (at least 6 characters)",
+    "passwordConfirmHint": "Re-enter your password",
+    "forgotPassword": "Forgot Password?",
+    "loginTitle": "Ready to be productive?",
+    "registerTitle": "Let's get started!",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "forgotPasswordSoon": "Password reset coming soon",
+    "passwordRequired": "Password confirmation required",
+    "passwordMismatch": "Passwords don't match",
+    "signOut": "Sign Out",
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "cancel": "Cancel"
+  },
+  "home": {
+    "title": "Notes",
+    "newNote": "Add New Note",
+    "settings": "Settings",
+    "searchHint": "Search in notes...",
+    "filterAndSort": "Filter and Sort",
+    "emptyNotesTitle": "No notes yet",
+    "emptyNotesMessage": "Tap the + button to add a new note",
+    "notFoundTitle": "No notes found",
+    "notFoundMessage": "Try a different search",
+    "deleted": "Deleted",
+    "undo": "Undo"
+  },
+  "note": {
+    "titleHint": "Enter note title",
+    "contentHint": "Write your note here...",
+    "title": "Title",
+    "content": "Content",
+    "pinned": "Pinned",
+    "pinNote": "Pin to Top",
+    "unpinNote": "Unpin",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "createFlashcard": "Create Flashcard",
+    "flashcardCreating": "Creating flashcards...",
+    "flashcardEmptyError": "Note content is empty. Content is required to create flashcards.",
+    "errorAdding": "Error adding note",
+    "errorUpdating": "Error updating note",
+    "errorDeleting": "Error deleting note",
+    "errorPinning": "Error changing pin status",
+    "errorSync": "Sync error"
+  },
+  "filter": {
+    "title": "Filter and Sort",
+    "pinnedOnly": "Pinned only",
+    "pinnedOnlyDescription": "Show only pinned notes",
+    "sorting": "Sorting",
+    "reset": "Reset",
+    "apply": "Apply"
+  },
+  "sort": {
+    "dateModified": "Last modified",
+    "dateModifiedDesc": "Most recently edited first",
+    "dateCreated": "Date (Old → New)",
+    "dateCreatedDesc": "Oldest notes first",
+    "titleAZ": "Title (A-Z)",
+    "titleAZDesc": "Alphabetical order",
+    "titleZA": "Title (Z-A)",
+    "titleZADesc": "Reverse alphabetical order"
+  },
+  "flashcard": {
+    "close": "Close",
+    "showAnswer": "Show Answer",
+    "hideAnswer": "Hide Answer",
+    "previous": "Previous",
+    "next": "Next",
+    "question": "Question",
+    "answer": "Answer",
+    "of": "of"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "subscription": "Subscription",
+    "support": "Support",
+    "changeLanguage": "Change Language",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "themeSelect": "Select Theme",
+    "failedUploads": "Failed Uploads",
+    "currentPlan": "Current Plan",
+    "freePlan": "Free Plan",
+    "restorePurchases": "Restore Purchases",
+    "accessCode": "Access Code",
+    "contactSupport": "Contact Support",
+    "goToWebsite": "Go to Website",
+    "upgradePremium": "Upgrade to Unlimited",
+    "comingSoon": "Coming Soon",
+    "comingSoonMessage": "This feature is coming soon.",
+    "ok": "OK"
+  },
+  "sync": {
+    "error": "Sync error",
+    "retrying": "Retrying...",
+    "success": "Synchronized"
+  },
+  "error": {
+    "pageNotFound": "Page not found"
+  },
+  "validation": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "getStarted": "Get Started",
+    "welcome": {
+      "title": "Rediscover Note-Taking",
+      "description": "Fast, secure, and synchronized note-taking experience. Capture your thoughts anytime, anywhere."
+    },
+    "aiFlashcard": {
+      "title": "AI-Powered Flashcards",
+      "description": "Automatically create learning cards from your notes using artificial intelligence. Accelerate learning and reinforce knowledge.",
+      "badge": "AI-Powered"
+    },
+    "sync": {
+      "title": "Access Everywhere",
+      "description": "Your notes sync automatically across all your devices. Phone, tablet, or computer - your data is always with you."
+    },
+    "ready": {
+      "title": "Ready to Start?",
+      "description": "Let your productivity journey begin. Sign in now or create a new account.",
+      "login": "Login",
+      "register": "Register"
+    }
+  }
+}
+
