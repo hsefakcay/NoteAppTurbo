@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 /// Bottom sheet başlık ve ikon widget'ı
@@ -43,7 +44,7 @@ class NoteBottomSheetHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                isEditing ? 'Notu Düzenle' : 'Yeni Not Oluştur',
+                isEditing ? 'note.editTitle'.tr() : 'note.createTitle'.tr(),
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.5,
@@ -51,7 +52,7 @@ class NoteBottomSheetHeader extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                isEditing ? 'Notunuzu güncelleyin' : 'Fikirlerinizi kaydedin',
+                isEditing ? 'note.editDescription'.tr() : 'note.createDescription'.tr(),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withOpacity(0.6),
                 ),
