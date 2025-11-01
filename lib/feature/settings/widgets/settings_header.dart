@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
 
@@ -12,7 +13,7 @@ class SettingsHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Settings', style: Theme.of(context).textTheme.displayLarge),
+          Text('settings.title'.tr(), style: Theme.of(context).textTheme.displayLarge),
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
             icon: Container(

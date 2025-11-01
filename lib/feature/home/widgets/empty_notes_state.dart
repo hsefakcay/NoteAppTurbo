@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 /// Notlar boş olduğunda gösterilen widget
@@ -21,14 +22,14 @@ class EmptyNotesState extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            isSearching ? 'Not bulunamadı' : 'Henüz not yok',
+            isSearching ? 'home.notFoundTitle'.tr() : 'home.emptyNotesTitle'.tr(),
             style: theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onSurface.withOpacity(0.6),
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            isSearching ? 'Farklı bir arama deneyin' : 'Yeni not eklemek için + butonuna tıklayın',
+            isSearching ? 'home.notFoundMessage'.tr() : 'home.emptyNotesMessage'.tr(),
             style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),

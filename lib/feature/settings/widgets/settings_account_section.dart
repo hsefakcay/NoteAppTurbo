@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,18 +22,18 @@ class SettingsAccountSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsSection(
-      title: 'Account',
+      title: 'settings.account'.tr(),
       children: [
-        SettingsMenuItem(icon: Icons.translate, title: 'Change Language', onTap: onLanguageChange),
+        SettingsMenuItem(icon: Icons.translate, title: 'settings.changeLanguage'.tr(), onTap: onLanguageChange),
         SettingsMenuItem(
           icon: Icons.palette_outlined,
-          title: 'Theme',
+          title: 'settings.theme'.tr(),
           trailing: _ThemeTrailing(),
           onTap: onThemeChange,
         ),
         SettingsMenuItem(
           icon: Icons.cloud_upload_outlined,
-          title: 'Failed Uploads',
+          title: 'settings.failedUploads'.tr(),
           onTap: onFailedUploads,
         ),
       ],
@@ -49,13 +50,13 @@ class _ThemeTrailing extends StatelessWidget {
         String themeName;
         switch (state.themeMode) {
           case ThemeMode.light:
-            themeName = 'Light';
+            themeName = 'settings.themeLight'.tr();
             break;
           case ThemeMode.dark:
-            themeName = 'Dark';
+            themeName = 'settings.themeDark'.tr();
             break;
           case ThemeMode.system:
-            themeName = 'System';
+            themeName = 'settings.themeSystem'.tr();
             break;
         }
 

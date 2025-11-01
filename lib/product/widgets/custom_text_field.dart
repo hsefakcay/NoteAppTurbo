@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -85,8 +86,8 @@ class CustomTextField extends StatefulWidget {
   /// Email input factory
   factory CustomTextField.email({
     TextEditingController? controller,
-    String? hintText = 'Email adresiniz',
-    String? labelText = 'Email',
+    String? hintText,
+    String? labelText,
     String? Function(String?)? validator,
     void Function(String)? onChanged,
   }) {
@@ -104,8 +105,8 @@ class CustomTextField extends StatefulWidget {
   /// Password input factory
   factory CustomTextField.password({
     TextEditingController? controller,
-    String? hintText = 'Şifreniz',
-    String? labelText = 'Şifre',
+    String? hintText,
+    String? labelText,
     String? Function(String?)? validator,
     void Function(String)? onChanged,
   }) {
@@ -123,7 +124,7 @@ class CustomTextField extends StatefulWidget {
   /// Search input factory
   factory CustomTextField.search({
     TextEditingController? controller,
-    String? hintText = 'Ara...',
+    String? hintText,
     void Function(String)? onChanged,
     VoidCallback? onSuffixIconTap,
   }) {
@@ -160,21 +161,21 @@ class CustomTextField extends StatefulWidget {
 
   static String? _defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email gerekli';
+      return 'validation.emailRequired'.tr();
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Geçerli bir email giriniz';
+      return 'validation.emailInvalid'.tr();
     }
     return null;
   }
 
   static String? _defaultPasswordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Şifre gerekli';
+      return 'validation.passwordRequired'.tr();
     }
     if (value.length < 6) {
-      return 'Şifre en az 6 karakter olmalı';
+      return 'validation.passwordMinLength'.tr();
     }
     return null;
   }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../product/enums/notes_sort_option.dart';
@@ -67,7 +68,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         Icon(Icons.tune_rounded, color: theme.colorScheme.primary, size: 24),
         const SizedBox(width: 12),
         Text(
-          'Filtrele ve Sırala',
+          'filter.title'.tr(),
           style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
@@ -78,8 +79,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     return SwitchListTile(
       value: _showPinnedOnly,
       onChanged: (value) => setState(() => _showPinnedOnly = value),
-      title: Text('Sadece sabitlenenler', style: theme.textTheme.bodyLarge),
-      subtitle: Text('Yalnızca sabitlenmiş notları göster', style: theme.textTheme.bodySmall),
+      title: Text('filter.pinnedOnly'.tr(), style: theme.textTheme.bodyLarge),
+      subtitle: Text('filter.pinnedOnlyDescription'.tr(), style: theme.textTheme.bodySmall),
       activeThumbColor: theme.colorScheme.primary,
       contentPadding: EdgeInsets.zero,
     );
@@ -93,15 +94,15 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Sıralama', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+        Text('filter.sorting'.tr(), style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         ...NotesSortOption.values.map(
           (option) => RadioListTile<NotesSortOption>(
             value: option,
             groupValue: _sortBy,
             onChanged: (value) => setState(() => _sortBy = value!),
-            title: Text(option.label),
-            subtitle: Text(option.description, style: theme.textTheme.bodySmall),
+            title: Text(option.label(context)),
+            subtitle: Text(option.description(context), style: theme.textTheme.bodySmall),
             activeColor: theme.colorScheme.primary,
             contentPadding: EdgeInsets.zero,
           ),
@@ -125,7 +126,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text('Sıfırla'),
+            child: Text('filter.reset'.tr()),
           ),
         ),
         const SizedBox(width: 12),
@@ -144,7 +145,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text('Uygula'),
+            child: Text('filter.apply'.tr()),
           ),
         ),
       ],

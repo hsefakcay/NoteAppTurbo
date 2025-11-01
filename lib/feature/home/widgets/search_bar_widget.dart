@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
 
@@ -29,7 +30,7 @@ class SearchBarWidget extends StatelessWidget {
           Expanded(
             child: CustomTextField.search(
               controller: controller,
-              hintText: 'Notlarda ara...',
+              hintText: 'home.searchHint'.tr(),
               onChanged: onChanged,
               onSuffixIconTap: onClear,
             ),
@@ -62,7 +63,7 @@ class SearchBarWidget extends StatelessWidget {
               ? theme.colorScheme.primary
               : theme.colorScheme.onSurface.withOpacity(0.7),
         ),
-        tooltip: 'Filtrele',
+        tooltip: 'filter.title'.tr(),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 1)
+// ignore: must_be_immutable
 class Note extends HiveObject with EquatableMixin {
   Note({
     required this.id,

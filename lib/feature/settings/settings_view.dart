@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import '../../product/widgets/gradient_button.dart';
 import '../auth/bloc/auth_cubit.dart';
 import 'bloc/settings_cubit.dart';
 import 'dialogs/coming_soon_dialog.dart';
+import 'dialogs/language_dialog.dart';
 import 'dialogs/sign_out_dialog.dart';
 import 'dialogs/theme_dialog.dart';
 import 'widgets/index.dart';
@@ -45,7 +47,7 @@ class _SettingsViewState extends State<SettingsView> {
                   context.sized.emptySizedHeightBoxLow3x,
                   _buildPremiumButton(),
                   context.sized.emptySizedHeightBoxLow,
-                  _buildAccountSection(),
+                  _buildAccountSection(context),
                   context.sized.emptySizedHeightBoxLow,
                   _buildSubscriptionSection(),
                   context.sized.emptySizedHeightBoxLow,
@@ -77,7 +79,7 @@ class _SettingsViewState extends State<SettingsView> {
   /// Premium butonu
   Widget _buildPremiumButton() {
     return GradientButton(
-      text: 'Upgrade to Unlimited',
+      text: 'settings.upgradePremium'.tr(),
       onPressed: () => ComingSoonDialog.show(context),
       icon: const Icon(Icons.star, color: Colors.white, size: 22),
       height: 64,
@@ -85,9 +87,9 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   /// Hesap ayarları bölümü
-  Widget _buildAccountSection() {
+  Widget _buildAccountSection(BuildContext context) {
     return SettingsAccountSection(
-      onLanguageChange: () => ComingSoonDialog.show(context),
+      onLanguageChange: () => LanguageDialog.show(context),
       onThemeChange: () => ThemeDialog.show(context),
       onFailedUploads: () => ComingSoonDialog.show(context),
     );
@@ -113,7 +115,7 @@ class _SettingsViewState extends State<SettingsView> {
   /// Çıkış yap butonu
   Widget _buildSignOutButton() {
     return GradientButton(
-      text: 'Çıkış Yap',
+      text: 'auth.signOut'.tr(),
       onPressed: _handleSignOut,
       icon: const Icon(Icons.logout, color: Colors.white, size: 22),
     );

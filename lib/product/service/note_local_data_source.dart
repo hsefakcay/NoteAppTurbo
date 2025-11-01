@@ -5,7 +5,7 @@ import '../models/note.dart';
 
 /// Local cache için not repository'si
 /// Single Responsibility: Sadece Hive CRUD işlemleri
-class NotesRepository {
+class NoteLocalDataSource {
   /// Tüm notları cache'den getir
   Future<List<Note>> getAll() async {
     final box = await _getBox();
