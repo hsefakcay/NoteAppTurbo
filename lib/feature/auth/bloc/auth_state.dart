@@ -3,13 +3,13 @@ part of 'auth_cubit.dart';
 class AuthState extends Equatable {
   const AuthState({required this.isLoading, this.user, this.errorMessage});
 
-  const AuthState.unauthenticated() : this(isLoading: false, user: null, errorMessage: null);
-  const AuthState.authenticated(User? user)
-    : this(isLoading: false, user: user, errorMessage: null);
-
   final bool isLoading;
   final User? user;
   final String? errorMessage;
+
+  const AuthState.unauthenticated() : this(isLoading: false, user: null, errorMessage: null);
+  const AuthState.authenticated(User? user)
+    : this(isLoading: false, user: user, errorMessage: null);
 
   bool get isAuthenticated => user != null;
 
